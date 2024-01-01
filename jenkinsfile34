@@ -1,0 +1,49 @@
+node {
+    // Define the Maven tool. Assumes 'M3' is the name of the Maven installation in Jenkins configuration
+    def mavenHome = tool 'maven3.9.6'
+
+    stage('1.clonecode') {
+        // Clone code from the Git repository
+        git 'https://github.com/olaoluwab/maven-web-application'
+    }
+
+    stage('2.mavenBuild') {
+        // Run the Maven build
+        sh "${mavenHome}/bin/mvn package"
+    }
+    /*
+    stage('3.codequalityanalysis') {
+        // run the code quality
+        sh "${mavenHome}/bin/mvn sonar:sonar"
+    }
+
+    stage('4.uploadArtifacts') {
+        // this uploads the artifcats to nexus for backup
+        sh "${mavenHome}/bin/mvn deploy"
+    }
+    */
+    stage('5.deploy2UAT') {deploy adapters: [tomcat9(credentialsId: 'tomcat-credentials', path: '', url: 'http://16.16.182.116:8080/')], contextPath: null, war: 'target/*war'
+    }
+
+    stage('6.manualApproval') {
+        sh " echo 'please review and approve' "
+        timeout(time:300, unit:'MINUTES')
+        {input message: 'Appliction ready for deployment , please review and approve'}
+    }
+
+    stage('7.deploy2prod') {deploy adapters: [tomcat9(credentialsId: 'tomcat-credentials', path: '', url: 'http://16.16.182.116:8080/')], contextPath: null, war: 'target/*war'
+    }
+    
+    stage('8.application performance monitoring') {
+        sh "echo 'monitoring and observation alerting' "
+        sh "echo 'apllication performance monitoring in progress' "
+    }
+    
+    stage('9.notification') {
+        sh "echo create emial notification to resolve any issues that mat arise"
+        // use pipeline syntax and email notification plugin to achiveve this
+        emailext body: '''the build and deployment status for teslaola app
+
+regards''', recipientProviders: [buildUser(), upstreamDevelopers()], subject: 'job status ', to: 'baiyewu.olaolu@gmail.com'
+    }
+}
