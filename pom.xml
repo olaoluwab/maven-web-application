@@ -94,14 +94,14 @@
 	<distributionManagement>
 	    <repository>
 	      <id>nexus</id>
-	      <name>Landmark Technologies Releases Nexus Repository</name>
-	      <url>http://13.53.37.158:8081/repository/teslareleaseola/</url>
+	      <name>olaoluenipipe realease</name>
+	      <url>http://16.16.217.76:8081/repository/olaoluenipiperealese/</url>
 	    </repository>
 	    
 	    <snapshotRepository>
 	      <id>nexus</id>
-	      <name>Landmark Technologies Snapshot Nexus Repository </name>
-	      <url>http://13.53.37.158:8081/repository/teslaola-snapshots/</url>
+	      <name>olaoluenipipe Snapshot Nexus Repository </name>
+	      <url>http://16.16.217.76:8081/repository/olaoluenipipesnap/</url>
 	    </snapshotRepository>
 	    
 	</distributionManagement>
